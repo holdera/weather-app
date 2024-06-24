@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import DayDetails from './DayDetails';
-import WeatherDetails from './WeatherDetails';
+import DayItemButton from './DayItemButton';
 import Hero from './Hero';
 import SunSetRise from './SunSetRise';
+import WeatherDetails from './WeatherDetails';
 
 import { calculateMean, formatDay, getCurrentDateTime } from '../utils/helpers';
 import { h1Heading } from '../styles/ui';
@@ -102,7 +103,7 @@ export default function DayItems({ data, unit }) {
 								<h2 className='mb-4'>Average Temperature</h2>
 
 								<p className={h1Heading}>
-									{calculateMean(todayDate.temps)} {unit}
+									{calculateMean(todayDate.temps)} &#8451;
 								</p>
 							</div>
 						)}
@@ -131,7 +132,7 @@ export default function DayItems({ data, unit }) {
 										}
 										day={day}
 									/>
-									<WeatherDetails day={day} unit={unit} />
+									<WeatherDetails day={day} />
 								</div>
 							))}
 						</div>
@@ -144,27 +145,27 @@ export default function DayItems({ data, unit }) {
 					Weather of the Week
 				</h2>
 
+				<p className='pt-0 pb-5'>
+					Click on the Buttons below to see the temperatures
+					throughout the day
+				</p>
+
 				{Object.keys(groupedData).map((date, index) => {
 					const meanTemp = calculateMean(groupedData[date].temps);
 					const meanHumidity = calculateMean(
 						groupedData[date].humidities
 					);
 
+					console.log(groupedData[date]?.days.weather);
+
 					return (
 						<div key={`${date}-${index}`} className='mb-5 w-full'>
-							<button
-								className='bg-blue-800/15 border border-blue-800/50 rounded-md w-full cursor-pointer p-3'
-								onClick={() => buttonHandler(index)}
-							>
-								<p className='date font-semibold'>{date}</p>
-								<h3 className='bold text-lg'>
-									Average Temperature
-								</h3>
-								<p className='font-bold'>
-									{Math.round(meanTemp)} {unit}
-								</p>
-								<p>Humidity | {Math.floor(meanHumidity)}%</p>
-							</button>
+							<DayItemButton
+								btnClick={() => buttonHandler(index)}
+								date={date}
+								temp={<>{Math.round(meanTemp)} &#8451;</>}
+								humidity={Math.floor(meanHumidity)}
+							/>
 							{reveal === index && (
 								<div
 									className='flex justify-around mt-4 text-center py-5 overflow-x-auto'

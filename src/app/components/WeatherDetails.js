@@ -1,26 +1,32 @@
+import Line from './Line';
 import { getWindSpeed } from '../utils/helpers';
 
-export default function WeatherDetails({ day, unit }) {
+export default function WeatherDetails({ day }) {
 	return (
 		<div className='temp'>
 			<p className='font-semibold'>
 				{Math.round(day.main.temp)}
-				{unit}
+				&#8451;
 			</p>
 			<p>
 				Feels like {Math.round(day.main.feels_like)}
-				{unit}
+				&#8451;
+			</p>
+
+			<div className='flex justify-center'>
+				<p>
+					High of {Math.round(day.main.temp_max)}
+					&#8451; <Line /> Low of {Math.round(day.main.temp_min)}
+					&#8451;
+				</p>
+			</div>
+
+			<p>
+				Humidity <Line /> {day.main.humidity}%
 			</p>
 			<p>
-				High of {Math.round(day.main.temp_max)}
-				{unit}
+				Wind <Line /> {getWindSpeed(day.wind.speed)}km/h
 			</p>
-			<p>
-				Low of {Math.round(day.main.temp_min)}
-				{unit}
-			</p>
-			<p>Humidity | {day.main.humidity}%</p>
-			<p>Wind | {getWindSpeed(day.wind.speed)}km/h</p>
 		</div>
 	);
 }

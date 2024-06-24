@@ -10,10 +10,12 @@ import Loader from './components/Loader';
 import { h1Heading } from './styles/ui';
 
 export default function Home() {
-	const [isFetching, setIsFetching] = useState(false);
-	const [coords, setCoords] = useState({});
+	const [coords, setCoords] = useState(null);
 	const [data, setData] = useState(null);
+	const [error, setError] = useState(null);
+	const [isFetching, setIsFetching] = useState(true);
 	const [unit, setUnit] = useState('metric');
+
 	const searchInput = useRef();
 
 	useEffect(() => {
@@ -24,66 +26,94 @@ export default function Home() {
 				setCoords({ lat, lon });
 			});
 		} else {
-			throw new Error('Geolocation is not supported by your browser');
+			setError('Geolocation is not supported by your browser');
+			setIsFetching(false);
 		}
 	}, []);
 
 	useEffect(() => {
-		if (coords.lat && coords.lon) {
+		if (coords) {
 			async function getWeatherData() {
-				setIsFetching(true);
-				const response = await fetch(
-					`https://api.openweathermap.org/data/2.5/forecast?lat=${
-						coords.lat && coords.lat
-					}&lon=${coords.lon}&appid=${KEY}&units=${unit}`
-				);
+				// setIsFetching(true);
+				setError(null);
 
-				const resData = await response.json();
+				try {
+					const response = await fetch(
+						`https://api.openweathermap.org/data/2.5/forecast?lat=${
+							coords.lat && coords.lat
+						}&lon=${coords.lon}&appid=${KEY}&units=${unit}`
+					);
 
-				if (!response.ok) {
-					throw new Error('Failed to get weather information');
+					if (!response.ok) {
+						throw new Error('Failed to get weather information');
+					}
+
+					const resData = await response.json();
+					setData(resData);
+				} catch (error) {
+					setError(error.message);
+				} finally {
+					setIsFetching(false);
 				}
-				setIsFetching(false);
-				setData(resData);
 			}
 			getWeatherData();
 		}
-	}, [coords]);
+	}, [coords, unit]);
 
 	function searchHandler() {
 		const value = searchInput.current.value;
 
-		async function fetchNewData() {
-			setIsFetching(true);
-			const response = await fetch(
-				`https://api.openweathermap.org/data/2.5/forecast?q=${value}&appid=${KEY}&units=${unit}`
-			);
-			if (!response.ok) {
-				setData(null);
-				setIsFetching(false);
-				throw new Error('Search value is not valid. Please try again.');
+		if (value) {
+			async function fetchNewData() {
+				setIsFetching(true);
+				setError(null);
+
+				try {
+					const response = await fetch(
+						`https://api.openweathermap.org/data/2.5/forecast?q=${value}&appid=${KEY}&units=${unit}`
+					);
+
+					if (!response.ok) {
+						throw new Error(
+							'Search value is not valid. Please try again.'
+						);
+					}
+
+					const searchResData = await response.json();
+					setData(searchResData);
+				} catch (error) {
+					setError(error.message);
+					setData(null);
+				} finally {
+					setIsFetching(false);
+				}
 			}
-			setIsFetching(false);
-			const searchResData = await response.json();
-			setData(searchResData);
+			fetchNewData();
 		}
-		value !== '' && fetchNewData();
 		searchInput.current.value = '';
 	}
 
-	let metricUnit = unit === 'imperial' ? <>&#8457;</> : <>&#8451;</>;
 	return (
 		<section>
 			<Container>
 				<SearchTool ref={searchInput} searchHandler={searchHandler} />
+
 				{isFetching && <Loader />}
 
-				{!isFetching && data && (
+				{error && !isFetching && (
+					<Hero>
+						<h1 className={h1Heading}>Error</h1>
+						<p>{error}</p>
+					</Hero>
+				)}
+
+				{!isFetching && data && !error && (
 					<>
-						<DayItems data={data} unit={metricUnit} />
+						<DayItems data={data} />
 					</>
 				)}
-				{!isFetching && !data && (
+
+				{!isFetching && !data && !error && (
 					<Hero>
 						<h1 className={h1Heading}>
 							Upcoming Weather Forecast is Unavailable
