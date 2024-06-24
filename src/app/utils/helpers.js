@@ -1,6 +1,6 @@
 export function calculateMean(values) {
 	const total = values.reduce((acc, value) => acc + value, 0);
-	return Math.floor(total / values.length);
+	return Math.round(total / values.length);
 }
 
 export function convertKelvinToCelsius(temp) {
@@ -11,15 +11,20 @@ export function convertKelvinToFah(temp) {
 	return Math.round((temp - 273.15) * 1.8 + 32);
 }
 
+export function convertCelsiusToFah(temp) {
+	return Math.round(temp * 1.8 + 32);
+}
+
 export function convertTime(time) {
 	const theTime = new Date(time * 1000);
-	const hours = theTime.getHours();
+	let hours = theTime.getHours();
 	const minutes = theTime.getMinutes();
 	const AmOrPm = hours < 12 ? 'AM' : 'PM';
-
-	const formattedTime = `${String(hours).padStart(2, '')}:${String(
-		minutes
-	).padStart(2, '0')} ${AmOrPm}`;
+	hours = hours % 12 || 12;
+	const formattedTime = `${String(hours)}:${String(minutes).padStart(
+		2,
+		'0'
+	)} ${AmOrPm}`;
 	return formattedTime;
 }
 
@@ -56,9 +61,10 @@ export function formatDay(day) {
 
 export function formatTime(theTime) {
 	const time = new Date(theTime);
-	return time.toLocaleTimeString('en-US', {
-		hour: '2-digit',
+	return time.toLocaleTimeString([], {
+		hour: 'numeric',
 		minute: '2-digit',
+		hour12: true,
 	});
 }
 
