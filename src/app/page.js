@@ -28,25 +28,24 @@ export default function Home() {
 		}
 	}, []);
 
-	async function getWeatherData() {
-		setIsFetching(true);
-		const response = await fetch(
-			`https://api.openweathermap.org/data/2.5/forecast?lat=${
-				coords.lat && coords.lat
-			}&lon=${coords.lon}&appid=${KEY}&units=${unit}`
-		);
-
-		const resData = await response.json();
-
-		if (!response.ok) {
-			throw new Error('Failed to get weather information');
-		}
-		setIsFetching(false);
-		setData(resData);
-	}
-
 	useEffect(() => {
 		if (coords.lat && coords.lon) {
+			async function getWeatherData() {
+				setIsFetching(true);
+				const response = await fetch(
+					`https://api.openweathermap.org/data/2.5/forecast?lat=${
+						coords.lat && coords.lat
+					}&lon=${coords.lon}&appid=${KEY}&units=${unit}`
+				);
+
+				const resData = await response.json();
+
+				if (!response.ok) {
+					throw new Error('Failed to get weather information');
+				}
+				setIsFetching(false);
+				setData(resData);
+			}
 			getWeatherData();
 		}
 	}, [coords]);
@@ -60,18 +59,19 @@ export default function Home() {
 				`https://api.openweathermap.org/data/2.5/forecast?q=${value}&appid=${KEY}&units=${unit}`
 			);
 			if (!response.ok) {
-				throw new Error('Cannot get data');
+				setData(null);
+				setIsFetching(false);
+				throw new Error('Search value is not valid. Please try again.');
 			}
 			setIsFetching(false);
 			const searchResData = await response.json();
 			setData(searchResData);
 		}
-		fetchNewData();
+		value !== '' && fetchNewData();
 		searchInput.current.value = '';
 	}
 
 	let metricUnit = unit === 'imperial' ? <>&#8457;</> : <>&#8451;</>;
-
 	return (
 		<section>
 			<Container>

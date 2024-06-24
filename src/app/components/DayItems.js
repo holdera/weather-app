@@ -54,10 +54,10 @@ export default function DayItems({ data, unit }) {
 	return (
 		<>
 			<Hero>
-				<div className='flex md:flex-row md:justify-between md:items-center'>
+				<div className='flex flex-col md:flex-row md:justify-between md:items-center'>
 					<div>
 						<h1 className={h1Heading}>
-							Upcoming Forecast in
+							Current location:
 							<br /> {data.city.name}, {data.city.country}
 						</h1>
 						<p className='font-semibold'>
@@ -87,13 +87,16 @@ export default function DayItems({ data, unit }) {
 				{todayDate && (
 					<div className='bg-blue-800/15 border border-blue-800/50 mb-5 py-3 px-3.5 rounded-md text-center w-full md:p-6'>
 						<h2 className='date font-bold text-xl mb-4 md:mb-6 md:text-2xl'>
-							Today's Weather
+							Today&apos;s Weather
 						</h2>
-						<div className='flex justify-around flex-wrap'>
+						<div
+							className='flex justify-around flex-wrap overflow-x-auto'
+							tabIndex={0}
+						>
 							{todayDate.days.map((day) => (
 								<div
 									key={`${day.dt}-today-data`}
-									className='w-1/3'
+									className='w-1/3 min-w-[48%] mr-[4%] md:mr-[2%] md:min-w-[32%]'
 								>
 									<DayDetails
 										aria-hidden={
@@ -126,14 +129,20 @@ export default function DayItems({ data, unit }) {
 								className='bg-blue-800/15 border border-blue-800/50 rounded-md w-full cursor-pointer p-3'
 								onClick={() => buttonHandler(index)}
 							>
-								<p className='date font-bold'>{date}</p>
-								<p className='font-bold text-xl'>
+								<p className='date font-semibold'>{date}</p>
+								<h3 className='bold text-lg'>
+									Average Temperature
+								</h3>
+								<p className='font-bold'>
 									{Math.round(meanTemp)} {unit}
 								</p>
 								<p>Humidity | {Math.floor(meanHumidity)}%</p>
 							</button>
 							{reveal === index && (
-								<div className='flex justify-around mt-4 text-center pb-5 overflow-x-auto'>
+								<div
+									className='flex justify-around mt-4 text-center pb-5 overflow-x-auto'
+									tabIndex={0}
+								>
 									{groupedData[date].days.map((day) => (
 										<div
 											key={`${day.dt}-group-data`}

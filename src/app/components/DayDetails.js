@@ -10,7 +10,7 @@ export default function DayDetails({ day, ...props }) {
 					<img
 						className='m-auto'
 						src={`https://openweathermap.org/img/w/${weather.icon}.png`}
-						alt={weather.description}
+						alt=''
 					/>
 					<p className='capitalize'>{weather.description}</p>
 				</div>
