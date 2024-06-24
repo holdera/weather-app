@@ -193,7 +193,9 @@ export default function DayItems({ data, unit }) {
 									</div>
 									<Image
 										src='/images/arrow-icon.svg'
-										alt='click to toggle'
+										alt={`click to ${
+											reveal === index ? 'close' : 'open'
+										}`}
 										width={30}
 										height={30}
 										className={`absolute transition-all right-5 top-0 bottom-0 my-auto md:right-10 ${
