@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import DayDetails from './DayDetails';
 import WeatherDetails from './WeatherDetails';
 import Hero from './Hero';
@@ -10,6 +10,11 @@ import { h1Heading } from '../styles/ui';
 export default function DayItems({ data, unit }) {
 	const [reveal, setReveal] = useState(null);
 	const [todayDate, seTodayDate] = useState(null);
+
+	const detailsContainer = useRef();
+	const [isDragging, setIsDragging] = useState(false);
+	const [startX, setStartX] = useState(0);
+	const [scrollLeft, setScrollLeft] = useState(0);
 
 	function buttonHandler(index) {
 		setReveal((prevState) => (prevState === index ? null : index));
@@ -50,6 +55,28 @@ export default function DayItems({ data, unit }) {
 		}
 		return acc;
 	}, {});
+
+	const MouseDownHandler = (e) => {
+		setIsDragging(true);
+		setStartX(e.pageX - detailsContainer.current.offsetLeft);
+		setScrollLeft(detailsContainer.current.scrollLeft);
+	};
+
+	const MouseLeaveHandler = () => {
+		setIsDragging(false);
+	};
+
+	const MouseUpHandler = () => {
+		setIsDragging(false);
+	};
+
+	const MouseMoveHandler = (e) => {
+		if (!isDragging) return;
+		e.preventDefault();
+		const x = e.pageX - detailsContainer.current.offsetLeft;
+		const moving = (x - startX) * 3;
+		detailsContainer.current.scrollLeft = scrollLeft - moving;
+	};
 
 	return (
 		<>
@@ -140,8 +167,13 @@ export default function DayItems({ data, unit }) {
 							</button>
 							{reveal === index && (
 								<div
-									className='flex justify-around mt-4 text-center pb-5 overflow-x-auto'
+									className='flex justify-around mt-4 text-center py-5 overflow-x-auto'
 									tabIndex={0}
+									ref={detailsContainer}
+									onMouseDown={MouseDownHandler}
+									onMouseLeave={MouseLeaveHandler}
+									onMouseUp={MouseUpHandler}
+									onMouseMove={MouseMoveHandler}
 								>
 									{groupedData[date].days.map((day) => (
 										<div
