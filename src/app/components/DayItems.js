@@ -161,8 +161,6 @@ export default function DayItems({ data, unit }) {
 						.map((d) => d.icon)
 						.toString();
 
-					console.log(groupedData[date]);
-
 					return (
 						<>
 							<div
