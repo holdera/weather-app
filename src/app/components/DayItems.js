@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
 import DayDetails from './DayDetails';
 import DayItemButton from './DayItemButton';
 import Hero from './Hero';
+import Line from './Line';
 import SunSetRise from './SunSetRise';
 import WeatherDetails from './WeatherDetails';
 
@@ -48,11 +50,13 @@ export default function DayItems({ data, unit }) {
 					temps: [],
 					pressures: [],
 					humidities: [],
+					weather: [],
 				};
 			}
 			acc[date].days.push(day);
 			acc[date].temps.push(day.main.temp);
 			acc[date].humidities.push(day.main.humidity);
+			acc[date].weather.push(day.weather);
 		}
 		return acc;
 	}, {});
@@ -118,13 +122,13 @@ export default function DayItems({ data, unit }) {
 							Today&apos;s Weather
 						</h2>
 						<div
-							className='flex justify-around flex-wrap overflow-x-auto'
+							className='flex justify-around flex-wrap overflow-x-auto gap-3'
 							tabIndex={0}
 						>
 							{todayDate.days.map((day) => (
 								<div
 									key={`${day.dt}-today-data`}
-									className='w-1/3 min-w-[48%] mr-[4%] md:mr-[2%] md:min-w-[32%]'
+									className='w-1/3 min-w-[48%] md:min-w-[32%]'
 								>
 									<DayDetails
 										aria-hidden={
@@ -140,35 +144,71 @@ export default function DayItems({ data, unit }) {
 				)}
 			</section>
 
-			<section className='flex flex-col w-full'>
+			<section className=' w-full'>
 				<h2 className='font-bold text-xl mt-6 mb-5 md:text-2xl'>
 					Weather of the Week
 				</h2>
-
-				<p className='pt-0 pb-5'>
-					Click on the Buttons below to see the temperatures
-					throughout the day
-				</p>
 
 				{Object.keys(groupedData).map((date, index) => {
 					const meanTemp = calculateMean(groupedData[date].temps);
 					const meanHumidity = calculateMean(
 						groupedData[date].humidities
 					);
+					const desc = groupedData[date].weather[0]
+						.map((d) => d.main)
+						.toString();
+					const img = groupedData[date].weather[0]
+						.map((d) => d.icon)
+						.toString();
 
-					console.log(groupedData[date]?.days.weather);
+					console.log(groupedData[date]);
 
 					return (
-						<div key={`${date}-${index}`} className='mb-5 w-full'>
-							<DayItemButton
-								btnClick={() => buttonHandler(index)}
-								date={date}
-								temp={<>{Math.round(meanTemp)} &#8451;</>}
-								humidity={Math.floor(meanHumidity)}
-							/>
+						<>
+							<div
+								key={`${date}-${index}`}
+								className='mb-5 w-full'
+							>
+								<DayItemButton
+									btnClick={() => buttonHandler(index)}
+								>
+									<div className='w-1/2 text-left'>
+										<p className='date font-semibold'>
+											{date}
+										</p>
+
+										<Image
+											src={`https://openweathermap.org/img/w/${img}.png`}
+											alt=''
+											height={50}
+											width={50}
+										/>
+										<p>{desc}</p>
+										<p className='font-bold mt-2'>
+											{Math.round(meanTemp)} &#8451;
+										</p>
+
+										<p>
+											Humidity <Line />{' '}
+											{Math.floor(meanHumidity)}%
+										</p>
+									</div>
+									<Image
+										src='/images/arrow-icon.svg'
+										alt='click to toggle'
+										width={30}
+										height={30}
+										className={`absolute transition-all right-5 top-0 bottom-0 my-auto md:right-10 ${
+											reveal === index
+												? 'rotate-180'
+												: 'transform-none'
+										}`}
+									/>
+								</DayItemButton>
+							</div>
 							{reveal === index && (
 								<div
-									className='flex justify-around mt-4 text-center py-5 overflow-x-auto'
+									className='flex justify-around mt-4 text-center py-5 overflow-x-auto mb-5 md:mb-5'
 									tabIndex={0}
 									ref={detailsContainer}
 									onMouseDown={MouseDownHandler}
@@ -194,7 +234,7 @@ export default function DayItems({ data, unit }) {
 									))}
 								</div>
 							)}
-						</div>
+						</>
 					);
 				})}
 			</section>

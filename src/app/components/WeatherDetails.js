@@ -14,9 +14,9 @@ export default function WeatherDetails({ day }) {
 			</p>
 
 			<div className='flex justify-center'>
-				<p>
+				<p className='leading-[1.5] md:leading-[inherit]'>
 					High of {Math.round(day.main.temp_max)}
-					&#8451; <Line /> Low of {Math.round(day.main.temp_min)}
+					&#8451; <Line /> Low&nbsp;of {Math.round(day.main.temp_min)}
 					&#8451;
 				</p>
 			</div>
