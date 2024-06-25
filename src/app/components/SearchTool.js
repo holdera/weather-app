@@ -4,23 +4,34 @@ import { forwardRef, useState } from 'react';
 const SearchTool = forwardRef(function SearchTool({ searchHandler }, ref) {
 	const [searchInput, setSearchInput] = useState('');
 	const [error, setError] = useState(false);
+	const [errorMsg, setErrorMsg] = useState('');
+
+	const pattern = /[^\w\s]/;
+
+	function validate(item) {
+		if (!item) {
+			setError(true);
+			setErrorMsg('Please enter a valid city in the field above.');
+		} else if (pattern.test(item)) {
+			setError(true);
+			setErrorMsg('Only letters and spaces allowed.');
+		} else {
+			setError(false);
+			setErrorMsg('');
+		}
+	}
 
 	function changeHandler(e) {
 		const value = e.target.value;
 		setSearchInput(value);
-		if (!value) {
-			setError(true);
-		} else {
-			setError(false);
-		}
+		validate(value);
 	}
 
 	function submitHandler(e) {
 		e.preventDefault();
-		if (!searchInput) {
-			setError(true);
-		} else {
-			setError(false);
+
+		validate(searchInput);
+		if (!error && searchInput) {
 			searchHandler(searchInput);
 			setSearchInput('');
 		}
@@ -29,7 +40,7 @@ const SearchTool = forwardRef(function SearchTool({ searchHandler }, ref) {
 	return (
 		<div id='search-city' className='md:pb-4'>
 			<form
-				className='mb-5 mx-auto flex items-center justify-center w-full flex-wrap'
+				className='mb-5 mx-auto flex  justify-center w-full flex-wrap md:items-center'
 				onSubmit={submitHandler}
 				noValidate
 			>
@@ -56,16 +67,16 @@ const SearchTool = forwardRef(function SearchTool({ searchHandler }, ref) {
 					{error && (
 						<p
 							data-test='error-city'
-							className='md:absolute md:-bottom-[2.375rem]'
+							className='pt-1.5 md:absolute md:-bottom-[2.375rem]'
 						>
-							Please add a city in the text field above.
+							{errorMsg}
 						</p>
 					)}
 				</div>
 				<button
 					type='button'
 					id='search-btn'
-					className='font-bold border border-transparent rounded-lg bg-blue-800/75 p-2.5'
+					className='font-bold border border-transparent max-h-[2.875rem] rounded-lg bg-blue-800/75 p-2.5 md:max-h-[inherit]'
 					onClick={submitHandler}
 				>
 					Search
