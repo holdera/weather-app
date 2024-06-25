@@ -54,13 +54,17 @@ const SearchTool = forwardRef(function SearchTool({ searchHandler }, ref) {
 						onChange={changeHandler}
 					/>
 					{error && (
-						<p className='md:absolute md:-bottom-[2.375rem]'>
+						<p
+							data-test='error-city'
+							className='md:absolute md:-bottom-[2.375rem]'
+						>
 							Please add a city in the text field above.
 						</p>
 					)}
 				</div>
 				<button
 					type='button'
+					id='search-btn'
 					className='font-bold border border-transparent rounded-lg bg-blue-800/75 p-2.5'
 					onClick={submitHandler}
 				>

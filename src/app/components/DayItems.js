@@ -17,7 +17,7 @@ export default function DayItems({ data, unit }) {
 	const detailsContainer = useRef();
 	const [isDragging, setIsDragging] = useState(false);
 	const [startX, setStartX] = useState(0);
-	const [scrollLeft, setScrollLeft] = useState(0);
+	const [scrollLeft, setScrollLeft] = useState({});
 
 	function buttonHandler(index) {
 		setReveal((prevState) => (prevState === index ? null : index));
@@ -122,31 +122,37 @@ export default function DayItems({ data, unit }) {
 							Today&apos;s Weather
 						</h2>
 						<div
-							className='flex justify-around flex-wrap overflow-x-auto gap-3'
+							className='flex justify-around mt-4 text-center py-5 overflow-x-auto mb-5 md:mb-5'
 							tabIndex={0}
 						>
-							{todayDate.days.map((day) => (
-								<div
-									key={`${day.dt}-today-data`}
-									className='w-1/3 min-w-[48%] md:min-w-[32%]'
-								>
-									<DayDetails
-										aria-hidden={
-											reveal === null ? true : false
-										}
-										day={day}
-									/>
-									<WeatherDetails day={day} />
-								</div>
-							))}
+							{todayDate.days.map((day, i) => {
+								if (i < 3) {
+									return (
+										<div
+											key={`${day.dt}-today-data`}
+											className='w-1/3 min-w-[48%] md:min-w-[32%]'
+										>
+											<DayDetails
+												aria-hidden={
+													reveal === null
+														? true
+														: false
+												}
+												day={day}
+											/>
+											<WeatherDetails day={day} />
+										</div>
+									);
+								}
+							})}
 						</div>
 					</div>
 				)}
 			</section>
 
-			<section className=' w-full'>
+			<section className='w-full'>
 				<h2 className='font-bold text-xl mt-6 mb-5 md:text-2xl'>
-					Weather of the Week
+					Weather for the Week
 				</h2>
 
 				{Object.keys(groupedData).map((date, index) => {
@@ -210,6 +216,8 @@ export default function DayItems({ data, unit }) {
 								<div
 									className='flex justify-around mt-4 text-center py-5 overflow-x-auto mb-5 md:mb-5'
 									tabIndex={0}
+									key={`${index}-dropdown`}
+									id={`${index}-dropdown-data`}
 									ref={detailsContainer}
 									onMouseDown={MouseDownHandler}
 									onMouseLeave={MouseLeaveHandler}

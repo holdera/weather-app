@@ -14,7 +14,6 @@ export default function Home() {
 	const [data, setData] = useState(null);
 	const [error, setError] = useState(null);
 	const [isFetching, setIsFetching] = useState(true);
-	const [unit, setUnit] = useState('metric');
 
 	const searchInput = useRef();
 
@@ -41,7 +40,7 @@ export default function Home() {
 					const response = await fetch(
 						`https://api.openweathermap.org/data/2.5/forecast?lat=${
 							coords.lat && coords.lat
-						}&lon=${coords.lon}&appid=${KEY}&units=${unit}`
+						}&lon=${coords.lon}&appid=${KEY}&units=metric`
 					);
 
 					if (!response.ok) {
@@ -58,7 +57,7 @@ export default function Home() {
 			}
 			getWeatherData();
 		}
-	}, [coords, unit]);
+	}, [coords]);
 
 	function searchHandler() {
 		const value = searchInput.current.value;
@@ -70,7 +69,7 @@ export default function Home() {
 
 				try {
 					const response = await fetch(
-						`https://api.openweathermap.org/data/2.5/forecast?q=${value}&appid=${KEY}&units=${unit}`
+						`https://api.openweathermap.org/data/2.5/forecast?q=${value}&appid=${KEY}&units=metric`
 					);
 
 					if (!response.ok) {
@@ -101,7 +100,7 @@ export default function Home() {
 				{isFetching && <Loader />}
 
 				{error && !isFetching && (
-					<Hero>
+					<Hero id='hero-error'>
 						<h1 className={h1Heading}>Error</h1>
 						<p>{error}</p>
 					</Hero>
