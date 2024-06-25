@@ -1,6 +1,6 @@
 ## Date
 
-Monday June 24, 2024
+Tuesday June 25, 2024
 
 ### Location of deployed application
 
