@@ -117,7 +117,7 @@ export default function DayItems({ data, unit }) {
 
 			<section id='today-weather'>
 				{todayDate && (
-					<div className='bg-blue-800/15 border border-blue-800/50 mb-5 py-3 px-3.5 rounded-md text-center w-full md:p-6'>
+					<div className='bg-blue-800/25 border border-blue-800/50 mb-5 py-3 px-3.5 rounded-md text-center w-full md:p-6 dark:bg-blue-800/15'>
 						<h2 className='date font-bold text-xl mb-4 md:mb-6 md:text-2xl'>
 							Today&apos;s Weather
 						</h2>
@@ -198,7 +198,7 @@ export default function DayItems({ data, unit }) {
 										</p>
 									</div>
 									<Image
-										src='/images/arrow-icon.svg'
+										src='/images/icons/arrow-icon.svg'
 										alt={`click to ${
 											reveal === index ? 'close' : 'open'
 										}`}
@@ -227,7 +227,7 @@ export default function DayItems({ data, unit }) {
 									{groupedData[date].days.map((day) => (
 										<div
 											key={`${day.dt}-group-data`}
-											className='w-1/3 min-w-[48%] bg-blue-800/15 border border-blue-800/50 py-5 rounded-md mr-[4%] md:mr-[2%] md:min-w-[32%]'
+											className='w-1/3 min-w-[48%] bg-blue-800/25 border border-blue-800/50 py-5 rounded-md mr-[4%] md:mr-[2%] md:min-w-[32%] dark:bg-blue-800/15'
 										>
 											<DayDetails
 												aria-hidden={

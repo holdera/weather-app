@@ -2,6 +2,7 @@ import { Poppins } from 'next/font/google';
 import './styles/globals.css';
 import Header from './components/structure/Header';
 import Footer from './components/structure/Footer';
+import { ThemeProvider } from 'next-themes';
 
 const poppins = Poppins({
 	weight: ['400', '500', '600', '700'],
@@ -18,11 +19,13 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang='en'>
 			<body className={poppins.className}>
-				<Header />
-				<main id='content' className='min-h-[100vh]'>
-					{children}
-				</main>
-				<Footer />
+				<ThemeProvider attribute='class'>
+					<Header />
+					<main id='content' className='min-h-[100vh]'>
+						{children}
+					</main>
+					<Footer />
+				</ThemeProvider>
 			</body>
 		</html>
 	);

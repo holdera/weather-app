@@ -7,7 +7,7 @@ Tuesday June 25, 2024
 https://weather-app-aholder.netlify.app/
 
 ### Time spent
-I think this took me about 6 hours including testing and I kept changing my mind.
+I think this took me about 6.5 hours including testing and I kept changing my mind.
 
 ### Assumptions made
 I assumed that when the app first loads, the details about the weather from the user's location is given. If they want to choose which location to display the weather information, they can use the search tool. I also assumed that the user is ok to see the weather units using the metric system, opposed to the imperial system.
@@ -24,6 +24,9 @@ I added some test cases using cypress. Due to the api taking a awhile to load th
 
 ### Instructions to run assignment locally
 Using node version 20 or higher, run the following command:
+
+### Updates
+Made updates after the last interview on June 7th, 2024. I added a light and dark theme, but also gave the user the ability to toggle between the themes. Ray, had thought I had implemented it but I did not. I wanted to make it happen.
 
 ```bash
 npm install

@@ -1,5 +1,6 @@
 'use client';
 import { forwardRef, useState } from 'react';
+import { buttonStyles } from '../styles/ui';
 
 const SearchTool = forwardRef(function SearchTool({ searchHandler }, ref) {
 	const [searchInput, setSearchInput] = useState('');
@@ -59,9 +60,9 @@ const SearchTool = forwardRef(function SearchTool({ searchHandler }, ref) {
 						ref={ref}
 						placeholder='Search City, eg: Rome'
 						required
-						className={`text-white border border-transparent rounded-md p-2.5 bg-blue-800/25 mr-3 w-full ${
+						className={`text-black border border-transparent rounded-md p-2.5 bg-blue-800/25 mr-3 w-full ${
 							error && 'border border-red'
-						}`}
+						}  dark:text-white`}
 						onChange={changeHandler}
 					/>
 					{error && (
@@ -76,7 +77,7 @@ const SearchTool = forwardRef(function SearchTool({ searchHandler }, ref) {
 				<button
 					type='button'
 					id='search-btn'
-					className='font-bold border border-transparent max-h-[2.875rem] rounded-lg bg-blue-800/75 p-2.5 md:max-h-[inherit]'
+					className={buttonStyles}
 					onClick={submitHandler}
 				>
 					Search
